@@ -96,8 +96,6 @@ def epToJpsi_CEM(x, flag, sqs, mc, y):
             else:
                 print('Invalid flag!')
     
-print(Sivers_xpart(0.45),TMDpart("N", 0.75))
-
 #main
 sqs = 7.2
 mc = 1.27
