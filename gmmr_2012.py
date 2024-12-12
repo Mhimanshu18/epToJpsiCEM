@@ -97,7 +97,7 @@ def epToJpsi_CEM(x, flag, sqs, mc, y):
                 print('Invalid flag!')
     
 #main
-sqs = 7.2
+sqs = 4.7
 mc = 1.27
 y = -0.8
 mD = 1.87
