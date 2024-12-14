@@ -54,7 +54,7 @@ def Sivers_xpart(x1):
     NdX= (And*x1**Ald)*((1-x1)**Abd)*(((Ald+Abd)**(Ald+Abd))/(Ald**Ald*Abd**Abd))
     Ng1x=(NuX+NdX)/2
     Ng2x=NdX
-    return Ng1x
+    return Ng2x
 
 def TMDpart(set, qT):
     al=0.25
@@ -97,50 +97,74 @@ def epToJpsi_CEM(x, flag, sqs, mc, y):
                 print('Invalid flag!')
     
 #main
-sqs = 4.7
-mc = 1.27
-y = -0.8
-mD = 1.87
+Energy = [7.2,17.33,31.6,158.1]
 
-def denominator(x):
-    return epToJpsi_CEM(x, "D", sqs, mc, y)
+for sqs in Energy: 
+    mc = 1.27
+    y = -0.8
+    mD = 1.87
 
-def numerator(x):
-    return epToJpsi_CEM(x, "N", sqs, mc, y)
+    def denominator(x):
+        return epToJpsi_CEM(x, "D", sqs, mc, y)
+
+    def numerator(x):
+        return epToJpsi_CEM(x, "N", sqs, mc, y)
 
 
-qT_limits = [0.0, 1.0]
-phi_qT_limits = [0.0, 2.0*np.pi]
-M2_limits = [4.0*mc**2, 4.0*mD**2]
+    qT_limits = [0.0, 1.0]
+    phi_qT_limits = [0.0, 2.0*np.pi]
+    M2_limits = [4.0*mc**2, 4.0*mD**2]
 
-data=[]
-while (y < 0.6):
-    integrator = vegas.Integrator([qT_limits, phi_qT_limits, M2_limits], nproc=8)
-    result_den = integrator(denominator, nitn=10, neval=20000)
-    result_num = integrator(numerator, nitn=10, neval=20000)
-    print(y, result_den.mean,result_num.mean)
-    data.append([y, result_den.mean,result_num.mean])
-    with open (f"data/gmmr_2012.dat",'w') as file:
-        writer = csv.writer(file,delimiter = "\t")
-        writer.writerows(data)
+    data=[]
+    while (y < 0.8):
+        integrator = vegas.Integrator([qT_limits, phi_qT_limits, M2_limits], nproc=8)
+        result_den = integrator(denominator, nitn=10, neval=20000)
+        result_num = integrator(numerator, nitn=10, neval=20000)
+        Asym=result_num.mean/result_den.mean
+        print(y, Asym)
+        data.append([y, Asym])
+        with open (f"data/gmmr_2012_{sqs}.dat",'w') as file:
+            writer = csv.writer(file,delimiter = "\t")
+            writer.writerows(data)
 
-    y+=0.1
+        y+=0.2
 
 #Plotting #
-x = [x[0] for x in data]  # Extract the y values
+"""x = [x[0] for x in data]  # Extract the y values
 y_d = [x[1] for x in data]  # Extract the denominator values
 y_n = [x[2] for x in data]  # Extract the numerator values
 
 # Calculate the ratio of numerator to denominator
 y_ratio = [n / d for n, d in zip(y_n, y_d)]
-
+y_ratio = [x[1] for x in data]
 # Plot the ratio
-plt.plot(x, y_ratio)
+plt.plot(x, y_ratio,  label='gmmr')
+
+icem=np.loadtxt(f"data/icem_7.2.dat")
+cem=np.loadtxt(f"data/gmmr_2012_7.2.dat")
+plt.plot(icem[:,0], icem[:,1], label='icem')
+plt.savefig("icem_Hermes.pdf", format="pdf", dpi=300)
+
+icem=np.loadtxt(f"data/icem_17.33.dat")
+cem=np.loadtxt(f"data/gmmr_2012_17.33.dat")
+plt.plot(icem[:,0], icem[:,1], label='icem')
+plt.savefig("icem_compass.pdf", format="pdf", dpi=300)
+
+icem=np.loadtxt(f"data/icem_31.6.dat")
+cem=np.loadtxt(f"data/gmmr_2012_31.6.dat")
+plt.plot(icem[:,0], icem[:,1], label='icem')
+plt.savefig("icem_EIC1.pdf", format="pdf", dpi=300)
+
+icem=np.loadtxt(f"data/icem_158.1.dat")
+cem=np.loadtxt(f"data/gmmr_2012_158.1.dat")
+plt.plot(icem[:,0], icem[:,1], label='icem')
+plt.savefig("icem_EIC2.pdf", format="pdf", dpi=300)
 plt.xlabel('y')
-plt.ylabel('Numerator / Denominator')
-plt.title('Numerator / Denominator vs y')
-plt.grid(True)
-plt.show()
+plt.ylabel('Asymmetry')
+plt.title('Asymmetry vs y')
+
+plt.legend()
+plt.show()"""
 
 
 
