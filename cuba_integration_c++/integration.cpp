@@ -3,27 +3,38 @@
 
 #include "cuba.h"
 
-static int Integrand(const int *ndim, const cubareal xx[], const int *ncomp, cubareal ff[], void *userdata)
+double myFunction(double x, double y)
 {
 
-  ff[0] = xx[0];
-
-    return 0;
+  return exp(x) * sin(y);
 }
 
-/*********************************************************************/
+static int Integrand(const int *ndim, const cubareal xx[], const int *ncomp, cubareal ff[], void *userdata)
+{
+  double xmin = 2.0, xmax = 5.0;
+  double dx = (xmax - xmin);
+  double x = xmin + dx * xx[0];
 
-#define NDIM 1
+  double ymin = 1.25, ymax = 3.0;
+  double dy = (ymax - ymin);
+  double y = ymin + dy * xx[1];
+
+  ff[0] = dx * dy * myFunction(x, y);
+
+  return 0;
+}
+
+#define NDIM 2
 #define NCOMP 1
 #define USERDATA NULL
 #define NVEC 1
 #define EPSREL 1e-3
 #define EPSABS 1e-12
-#define VERBOSE 2
+#define VERBOSE 0
 #define LAST 4
 #define SEED 0
-#define MINEVAL 0
-#define MAXEVAL 50000
+#define MINEVAL 500000
+#define MAXEVAL 5000000
 
 #define NSTART 1000
 #define NINCREASE 500
@@ -31,23 +42,6 @@ static int Integrand(const int *ndim, const cubareal xx[], const int *ncomp, cub
 #define GRIDNO 0
 #define STATEFILE NULL
 #define SPIN NULL
-
-#define NNEW 1000
-#define NMIN 2
-#define FLATNESS 25.
-
-#define KEY1 47
-#define KEY2 1
-#define KEY3 1
-#define MAXPASS 5
-#define BORDER 0.
-#define MAXCHISQ 10.
-#define MINDEVIATION .25
-#define NGIVEN 0
-#define LDXGIVEN NDIM
-#define NEXTRA 0
-
-#define KEY 0
 
 int main()
 {
@@ -60,7 +54,7 @@ int main()
         GRIDNO, STATEFILE, SPIN,
         &neval, &fail, integral, error, prob);
 
-  std::cout << (double)integral[NCOMP] << "\t" << (double)error[NCOMP] << "\t" << (double)prob[NCOMP] << "\n";
+  std::cout << (double)integral[0] << "\t" << (double)error[0] << "\t" << (double)prob[0] << "\t" << fail << "\n";
 
   return 0;
 }
