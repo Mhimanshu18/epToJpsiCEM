@@ -1,34 +1,27 @@
-import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
-# Function to read the data from a .dat file and return the x and y columns
-def read_data(file_name):
-    data = pd.read_csv(file_name, delim_whitespace=True, header=None)
-    x = data[0]  # First column (x values)
-    y = data[1]  # Second column (y values)
-    return x, y
+# Load data from the .dat file
+# Update the filename and delimiter based on your file format
+#filename = 'gmmr_2012_7.2.dat'
+data = np.loadtxt('data/gmmr_2012_7.2.dat', delimiter='\t')  # Change delimiter if needed (e.g., '\t' for tab-separated)
 
-# File names
-files = [
-    'data/gmmr_2012_158.1.dat', 'data/gmmr_2012_31.6.dat', 'data/icem_158.1.dat', 'data/icem_31.6.dat',
-    'data/gmmr_2012_17.33.dat', 'data/gmmr_2012_7.2.dat', 'data/icem_17.33.dat', 'data/icem_7.2.dat'
-]
+# Assuming two columns: X and Y
+x = data[:, 0]  # First column
+y = data[:, 1]  # Second column
 
-# Set up the plot
-plt.figure(figsize=(10, 6))
+# Plotting the data
+plt.figure(figsize=(8, 6))
+plt.plot(x, y, label='CEM', marker='o', linestyle='-', color='b')
 
-# Loop through each file, read the data, and plot it
-for file in files:
-    x, y = read_data(file)
-    label = file.split('.')[0]  # Use the file name (without extension) as the label
-    plt.plot(x, y, label=label)
-
-# Customize the plot
-plt.title('Comparison of Data from Different Files')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.legend(loc='best')
+# Adding labels, title, and legend
+plt.xlabel('qt', fontsize=12)
+plt.ylabel('Asymmetry', fontsize=12)
+plt.title('Asymmetry vs qt', fontsize=14)
+plt.legend()
 plt.grid(True)
+plt.tight_layout()
 
-# Show the plot
+# Show or save the plot
+plt.savefig('epToJpsiCEM.png')  # To save the plot
 plt.show()

@@ -97,11 +97,11 @@ def epToJpsi_CEM(x, flag, sqs, mc, y):
                 print('Invalid flag!')
     
 #main
-Energy = [7.2,17.33,31.6,158.1]
+Energy = [7.2]#7.2,17.33,31.6,158.1]
 
 for sqs in Energy: 
     mc = 1.27
-    y = -0.8
+    y = -0.6
     mD = 1.87
 
     def denominator(x):
@@ -116,7 +116,7 @@ for sqs in Energy:
     M2_limits = [4.0*mc**2, 4.0*mD**2]
 
     data=[]
-    while (y < 0.8):
+    while (y < 0.6):
         integrator = vegas.Integrator([qT_limits, phi_qT_limits, M2_limits], nproc=8)
         result_den = integrator(denominator, nitn=10, neval=20000)
         result_num = integrator(numerator, nitn=10, neval=20000)
@@ -127,7 +127,7 @@ for sqs in Energy:
             writer = csv.writer(file,delimiter = "\t")
             writer.writerows(data)
 
-        y+=0.2
+        y+=0.1
 
 #Plotting #
 """x = [x[0] for x in data]  # Extract the y values

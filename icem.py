@@ -13,14 +13,14 @@ MJpsi=3.096
 def ggToccbar(M2,mc,alphaS):
         w=(4.0*(mc**2))/M2
         alpha = 1.0/137.0
-        #if 0<w<1:
-        a0 = 0.5*(2/3)**2*(4*np.pi*alpha*alphaS)
-        a1 = (1.0 + w - 0.5*(w**2.0))
-        a2 = np.log( (1.0+np.sqrt(1.0-w))/(1.0-np.sqrt(1.0-w)) )
-        a3 = ((1+w)*np.sqrt(1.0-w))
-        return a0*(a1*a2 - a3)/M2
-        #else:
-         #   return 0.0
+        if 0<w<1:
+            a0 = 0.5*(2/3)**2*(4*np.pi*alpha*alphaS)
+            a1 = (1.0 + w - 0.5*(w**2.0))
+            a2 = np.log( (1.0+np.sqrt(1.0-w))/(1.0-np.sqrt(1.0-w)) )
+            a3 = ((1+w)*np.sqrt(1.0-w))
+            return a0*(a1*a2 - a3)/M2
+        else:
+            return 0.0
 
 def WWZ(xx, sqs, M2):
         em=0.511*10**(-3)
@@ -110,8 +110,6 @@ for sqs in Energy:
     mc = 1.27
     y = -0.8
     mD = 1.87
-
-
     def denominator(x):
         return epToJpsi_ICEM(x, "D", sqs, mc, y)
 
@@ -121,7 +119,7 @@ for sqs in Energy:
 
     qT_limits = [0.0, 1.0]
     phi_qT_limits = [0.0, 2.0*np.pi]
-    M2_limits = [MJpsi**2, 4.0*mD**2]
+    M2_limits = [MJpsi**2, 2*mD]
     data=[]
 
     
